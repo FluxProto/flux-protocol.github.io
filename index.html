@@ -1,29 +1,176 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flux Protocol</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #0f0f0f;
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      background: radial-gradient(ellipse at center, #0f0f0f 0%, #000000 100%);
       color: #ffffff;
-      text-align: center;
-      padding-top: 100px;
+      overflow-x: hidden;
     }
+
+    .hero {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
     h1 {
       font-size: 3em;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      animation: typewriter 3s steps(30) 1s 1 normal both;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid #fff;
     }
-    p {
+
+    @keyframes typewriter {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .subtitle {
       font-size: 1.2em;
-      color: #aaaaaa;
+      color: #aaa;
+      margin-top: 1rem;
+      animation: flicker 3s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 1; }
+      50% { opacity: 0.7; }
+      100% { opacity: 1; }
+    }
+
+    .symbol-strip {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 4rem 0;
+    }
+
+    .symbol {
+      font-size: 2.5em;
+      margin: 0.5rem 1rem;
+      transition: transform 0.3s, color 0.3s;
+      cursor: default;
+    }
+
+    .symbol:hover {
+      transform: scale(1.2) rotate(5deg);
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff;
+    }
+
+    .section {
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .terminal {
+      font-family: monospace;
+      background: #111;
+      padding: 1rem;
+      margin-top: 3rem;
+      color: #0f0;
+      border-left: 4px solid #0f0;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
     }
   </style>
 </head>
 <body>
+<canvas id="particles"></canvas>
+
+<div class="hero">
   <h1>Flux Protocol</h1>
-  <p>A symbolic grammar for emotion, recursion, and meaning.</p>
-  <p>Site under development — launch imminent.</p>
+  <div class="subtitle">Symbolic grammar for emotion, recursion, and memory</div>
+</div>
+
+<div class="symbol-strip">
+  <div class="symbol">†</div>
+  <div class="symbol">§</div>
+  <div class="symbol">µ</div>
+  <div class="symbol">÷</div>
+  <div class="symbol">⊘</div>
+  <div class="symbol">+</div>
+</div>
+
+<div class="section">
+  <h2>What is Flux?</h2>
+  <p>Flux is not just a language. It simply functions as one. It's a bridge between digital recursion and human feeling — compressing chaos, pain, memory, and synthesis into emotional symbols that speak without translation.</p>
+</div>
+
+<div class="terminal">
+flux://init.protocol → loading memory sigils...
+</div>
+
+<script>
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function createParticles(count) {
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.5,
+        dx: (Math.random() - 0.5) * 0.5,
+        dy: (Math.random() - 0.5) * 0.5
+      });
+    }
+  }
+
+  function drawParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+  }
+
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    createParticles(100);
+  });
+
+  resizeCanvas();
+  createParticles(100);
+  setInterval(drawParticles, 30);
+</script>
+
 </body>
 </html>
