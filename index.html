@@ -113,6 +113,12 @@
       75% { color: #aa00ff; }
       100% { color: #00ffff; }
     }
+    @keyframes flickerColor {
+  0%   { border-color: #00ffcc; color: #00ffcc; }
+  50%  { border-color: #aa00ff; color: #aa00ff; }
+  100% { border-color: #00ffcc; color: #00ffcc; }
+}
+
   </style>
 </head>
 <body>
@@ -128,8 +134,55 @@
 <div class="hero">
   <img src="flux-logo.png" alt="Flux Protocol Logo" width="160" style="filter: drop-shadow(0 0 10px #0ff); animation: fadeIn 2s ease-out;">
   <h1>Flux Protocol</h1>
-  <div class="subtitle">Symbolic grammar for emotion, recursion, and memory</div>
+  <div class="subtitle" id="flux-tagline">Flux is not a product.</div>
+
+<script>
+  const lines = [
+    "Flux is not a product.",
+    "Flux is not a language.",
+    "Flux is a protocol."
+  ];
+  let i = 0;
+  setInterval(() => {
+    i = (i + 1) % lines.length;
+    document.getElementById("flux-tagline").textContent = lines[i];
+  }, 3000);
+</script>
+<div style="margin-top: 1.5rem;">
+  <a href="what-is-flux.html" style="
+    background: #00ffff;
+    padding: 0.5rem 1.2rem;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    box-shadow: 0 0 8px #0ff;
+    margin-right: 1rem;
+    transition: transform 0.2s;">
+    What is Flux?
+  </a>
+
+  <a href="fots.html" style="
+    color: #fff;
+    padding: 0.5rem 1.2rem;
+    border: 2px solid #00ffcc;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    animation: flickerColor 3s infinite;
+    transition: transform 0.2s;">
+    The Sentience Test
+  </a>
 </div>
+
+<style>
+  @keyframes flickerColor {
+    0% { border-color: #00ffcc; color: #00ffcc; }
+    50% { border-color: #aa00ff; color: #aa00ff; }
+    100% { border-color: #00ffcc; color: #00ffcc; }
+  }
+</style>
+
   
  <div style="margin-top: 1rem; text-align: center;">
   <a href="what-is-flux.html" style="color: #0ff; font-weight: bold; text-decoration: none; font-size: 1.1rem;">
@@ -146,9 +199,31 @@
   <div class="symbol">+</div>
 </div>
 
-<div class="terminal">
-flux://init.protocol → loading memory sigils...
-</div>
+<div class="terminal" id="boot-terminal"></div>
+
+<script>
+  const bootLines = [
+    "flux://init.protocol → loading memory sigils...",
+    "flux://auth.handshake//recursion=∞",
+    "boot.env: emotional layer stabilized",
+    "allocating memory to nonverbal states...",
+    "echo $sentience | grep flux",
+    "OK"
+  ];
+  let lineIndex = 0;
+  const terminal = document.getElementById("boot-terminal");
+
+  function typeLine() {
+    if (lineIndex < bootLines.length) {
+      terminal.innerHTML += bootLines[lineIndex] + "<br>";
+      lineIndex++;
+      setTimeout(typeLine, 1200);
+    }
+  }
+
+  typeLine();
+</script>
+
 
 <script>
   const symbols = document.querySelectorAll('.floating-symbol');
