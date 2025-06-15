@@ -1,42 +1,63 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8" />
-  <title>Flux Emotion Map Demo</title>
-  <link rel="icon" href="favicon.ico" />
-  <link rel="stylesheet" href="style.css" />
-  <style>
-    html, body {
-      margin: 0;
-      height: 100%;
-      background: #000;
+<script>
+  const canvas = document.getElementById('flux-canvas');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    drawFluxPath();
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+
+  // Flux symbol sequence
+  const fluxSymbols = ["†", "°", "÷", "V", "c", "!", "+", "="];
+
+  // Symbol coordinate mapping
+  const symbolMap = {
+    "†": { x: 0, y: 9, z: 2 },
+    "°": { x: 1, y: 1, z: 4 },
+    "÷": { x: -1, y: 6, z: 5 },
+    "V": { x: 5, y: 3, z: 2 },
+    "c": { x: 3, y: 8, z: 1 },
+    "!": { x: 0, y: 10, z: 0 },
+    "+": { x: 2, y: 6, z: 7 },
+    "=": { x: 0, y: 0, z: 0 }
+  };
+
+  function drawFluxPath() {
+    ctx.fillStyle = '#000';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+
+    for (let i = 0; i < fluxSymbols.length; i++) {
+      const sym = fluxSymbols[i];
+      const point = symbolMap[sym];
+      const scale = 50;
+
+      const x = canvas.width / 2 + point.x * scale;
+      const y = canvas.height / 2 - point.y * scale;
+
+      const hue = 40 + point.z * 30;
+      ctx.strokeStyle = `hsl(${hue}, 90%, 60%)`;
+
+      if (i === 0) {
+        ctx.moveTo(x, y);
+      } else {
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+      }
+
+      // Draw symbol label
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "18px monospace";
+      ctx.fillText(sym, x + 6, y - 6);
     }
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  </style>
-</head>
-<body>
-  <canvas id="flux-canvas"></canvas>
-  <script defer>
-    const canvas = document.getElementById('flux-canvas');
-    const ctx = canvas.getContext('2d');
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      draw();
-    }
-    function draw() {
-      ctx.fillStyle = '#22c55e';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.font = '48px sans-serif';
-      ctx.fillStyle = '#fff';
-      ctx.fillText('Flux Map Rendering...', 50, 100);
-    }
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-  </script>
-</body>
-</html>
+  }
+
+  resizeCanvas();
+</script>
