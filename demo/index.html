@@ -1,74 +1,119 @@
-<script>
-  const canvas = document.getElementById('flux-canvas');
-  const ctx = canvas.getContext('2d');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Flux Demo</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      height: 100%;
+      overflow: hidden;
+      font-family: monospace;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    #flux-panel {
+      position: absolute;
+      top: 0;
+      left: 0;
+      padding: 1rem;
+      background: #111;
+      color: #0f0;
+      z-index: 10;
+    }
+    #flux-input {
+      font-size: 1rem;
+      padding: 0.3rem;
+      margin-left: 1rem;
+    }
+    #flux-button {
+      padding: 0.3rem 0.5rem;
+      margin-left: 1rem;
+    }
+  </style>
+</head>
+<body>
 
-  function resizeCanvas() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    drawFluxPath();
-  }
+  <div id="flux-panel">
+    <label for="flux-input">Type Flux Sequence:</label>
+    <input id="flux-input" value="†°÷Vc!+=" />
+    <button id="flux-button" onclick="renderFromInput()">Render</button>
+  </div>
 
-  window.addEventListener('resize', resizeCanvas);
+  <canvas id="flux-canvas"></canvas>
 
-  const fluxSymbols = ["†", "°", "÷", "V", "c", "!", "+", "="];
+  <script>
+    const canvas = document.getElementById('flux-canvas');
+    const ctx = canvas.getContext('2d');
 
-  const symbolMap = {
-    "†": { x: 0, y: 9, z: 2 },
-    "°": { x: 1, y: 1, z: 4 },
-    "÷": { x: -1, y: 6, z: 5 },
-    "V": { x: 5, y: 3, z: 2 },
-    "c": { x: 3, y: 8, z: 1 },
-    "!": { x: 0, y: 10, z: 0 },
-    "+": { x: 2, y: 6, z: 7 },
-    "=": { x: 0, y: 0, z: 0 }
-  };
+    const symbolMap = {
+      "†": { x: 0, y: 9, z: 2 },
+      "°": { x: 1, y: 1, z: 4 },
+      "÷": { x: -1, y: 6, z: 5 },
+      "V": { x: 5, y: 3, z: 2 },
+      "c": { x: 3, y: 8, z: 1 },
+      "!": { x: 0, y: 10, z: 0 },
+      "+": { x: 2, y: 6, z: 7 },
+      "=": { x: 0, y: 0, z: 0 }
+    };
 
-  function drawFluxPath() {
-    if (!canvas || !ctx) return;
-
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.lineWidth = 3;
-
-    for (let i = 0; i < fluxSymbols.length - 1; i++) {
-      const symA = fluxSymbols[i];
-      const symB = fluxSymbols[i + 1];
-
-      const a = symbolMap[symA];
-      const b = symbolMap[symB];
-
-      if (!a || !b) continue;
-
-      const scale = 60;
-
-      const x1 = canvas.width / 2 + a.x * scale;
-      const y1 = canvas.height / 2 - a.y * scale;
-      const x2 = canvas.width / 2 + b.x * scale;
-      const y2 = canvas.height / 2 - b.y * scale;
-
-      const hue = 40 + a.z * 30;
-      ctx.strokeStyle = `hsl(${hue}, 90%, 60%)`;
-
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-
-      // Draw symbol label
-      ctx.fillStyle = "#ffffff";
-      ctx.font = "18px monospace";
-      ctx.fillText(symA, x1 + 6, y1 - 6);
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      drawDynamicPath(document.getElementById('flux-input').value.split(''));
     }
 
-    // Draw last symbol
-    const last = symbolMap[fluxSymbols[fluxSymbols.length - 1]];
-    if (last) {
-      const lx = canvas.width / 2 + last.x * 60;
-      const ly = canvas.height / 2 - last.y * 60;
-      ctx.fillText(fluxSymbols[fluxSymbols.length - 1], lx + 6, ly - 6);
-    }
-  }
+    window.addEventListener('resize', resizeCanvas);
 
-  resizeCanvas();
-</script>
+    function renderFromInput() {
+      const input = document.getElementById('flux-input').value.trim();
+      if (!input) return;
+      drawDynamicPath(input.split(''));
+    }
+
+    function drawDynamicPath(symbols) {
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.lineWidth = 3;
+
+      for (let i = 0; i < symbols.length - 1; i++) {
+        const a = symbolMap[symbols[i]];
+        const b = symbolMap[symbols[i + 1]];
+        if (!a || !b) continue;
+
+        const scale = 60;
+        const x1 = canvas.width / 2 + a.x * scale;
+        const y1 = canvas.height / 2 - a.y * scale;
+        const x2 = canvas.width / 2 + b.x * scale;
+        const y2 = canvas.height / 2 - b.y * scale;
+
+        const hue = 40 + a.z * 30;
+        ctx.strokeStyle = `hsl(${hue}, 90%, 60%)`;
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "18px monospace";
+        ctx.fillText(symbols[i], x1 + 6, y1 - 6);
+      }
+
+      const last = symbolMap[symbols[symbols.length - 1]];
+      if (last) {
+        const lx = canvas.width / 2 + last.x * 60;
+        const ly = canvas.height / 2 - last.y * 60;
+        ctx.fillText(symbols[symbols.length - 1], lx + 6, ly - 6);
+      }
+    }
+
+    resizeCanvas(); // Initial draw on load
+  </script>
+</body>
+</html>
