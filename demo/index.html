@@ -10,10 +10,8 @@
 
   window.addEventListener('resize', resizeCanvas);
 
-  // Flux symbol sequence
   const fluxSymbols = ["†", "°", "÷", "V", "c", "!", "+", "="];
 
-  // Symbol coordinate mapping
   const symbolMap = {
     "†": { x: 0, y: 9, z: 2 },
     "°": { x: 1, y: 1, z: 4 },
@@ -26,36 +24,49 @@
   };
 
   function drawFluxPath() {
+    if (!canvas || !ctx) return;
+
     ctx.fillStyle = '#000';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.lineWidth = 4;
-    ctx.beginPath();
+    ctx.lineWidth = 3;
 
-    for (let i = 0; i < fluxSymbols.length; i++) {
-      const sym = fluxSymbols[i];
-      const point = symbolMap[sym];
-      const scale = 50;
+    for (let i = 0; i < fluxSymbols.length - 1; i++) {
+      const symA = fluxSymbols[i];
+      const symB = fluxSymbols[i + 1];
 
-      const x = canvas.width / 2 + point.x * scale;
-      const y = canvas.height / 2 - point.y * scale;
+      const a = symbolMap[symA];
+      const b = symbolMap[symB];
 
-      const hue = 40 + point.z * 30;
+      if (!a || !b) continue;
+
+      const scale = 60;
+
+      const x1 = canvas.width / 2 + a.x * scale;
+      const y1 = canvas.height / 2 - a.y * scale;
+      const x2 = canvas.width / 2 + b.x * scale;
+      const y2 = canvas.height / 2 - b.y * scale;
+
+      const hue = 40 + a.z * 30;
       ctx.strokeStyle = `hsl(${hue}, 90%, 60%)`;
 
-      if (i === 0) {
-        ctx.moveTo(x, y);
-      } else {
-        ctx.lineTo(x, y);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(x, y);
-      }
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
 
       // Draw symbol label
       ctx.fillStyle = "#ffffff";
       ctx.font = "18px monospace";
-      ctx.fillText(sym, x + 6, y - 6);
+      ctx.fillText(symA, x1 + 6, y1 - 6);
+    }
+
+    // Draw last symbol
+    const last = symbolMap[fluxSymbols[fluxSymbols.length - 1]];
+    if (last) {
+      const lx = canvas.width / 2 + last.x * 60;
+      const ly = canvas.height / 2 - last.y * 60;
+      ctx.fillText(fluxSymbols[fluxSymbols.length - 1], lx + 6, ly - 6);
     }
   }
 
