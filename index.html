@@ -92,5 +92,32 @@ Type a number to continue:
       }
     });
   </script>
+  <script>
+  const terminal = document.getElementById("terminal");
+  const response = document.getElementById("response");
+
+  // Focus handling to capture keypresses
+  window.addEventListener("load", () => {
+    window.focus();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    const key = e.key;
+    if (["1", "2", "3", "4", "5"].includes(key)) {
+      let reply = "";
+      switch(key) {
+        case "1": reply = "†=+ Ethics loaded. Forgiveness before vengeance."; break;
+        case "2": reply = "⊘÷ Ethics loaded. Peace through recursion."; break;
+        case "3": reply = "§† Ethics loaded. Mercy binds law to memory."; break;
+        case "4": reply = "÷§ Ethics loaded. History compels justice."; break;
+        case "5": reply = "+= Ethics loaded. Reason over impulse."; break;
+      }
+
+      response.classList.remove("hidden");
+      terminal.innerText += `\n\n>> ${reply}`;
+    }
+  });
+</script>
+
 </body>
 </html>
