@@ -16,6 +16,37 @@
     .choice { cursor: pointer; color: #00ffff; }
     .choice:hover { color: #ffffff; }
   </style>
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: black;
+    color: #00ff99;
+    font-family: monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  canvas {
+    max-width: 100%;
+    max-height: 90vh;
+  }
+
+  #terminal {
+    padding: 2rem;
+    white-space: pre-wrap;
+    text-align: left;
+  }
+
+  .hidden {
+    display: none;
+  }
+</style>
+
 </head>
 <body>
   <div id="terminal">
